@@ -77,10 +77,43 @@ F3 <- c(0,0,3,2,1,1)
 Y  <- c("Red","Red","Red","Green","Green","Red") # class labels
 train2 <- data.frame(X1 = F1,
                     X2 = F2,
-                    X3 = F3)
+                    X3 = F3,
+                    Y = Y)
 
 test2 <- c(0,0,0)
+
+# for scatterplot3d need a vector of colors to use to color points
+train2$classcolor[train2$Y=="Red"] <- "red"
+train2$classcolor[train2$Y=="Green"] <- "darkgreen"
+# to repeat the above approach, make a plot to look at points in the classes
+# this uses the scatterplot3d package, which leaves something to be desired
+# more infor at
+s3d <- scatterplot3d(train2$X1,train2$X2,train2$X3,
+              xlab = "X-axis",
+              ylab = "Y-axis",
+              zlab = "Z-axis",
+              color = train2$classcolor,         # color of points
+              pch=22,                            # shape of points
+              bg = train2$classcolor,            # fill the points with same color
+              #highlight.3d=TRUE,
+              col.axis="green",
+              col.grid="lightblue",
+              main="KNN Train Feature Space")
+# add test data, which is very hardwired! I am generating a sequence of 0 steps to produce (0,0,0)
+s3d$points3d(seq(0,0,0), seq(0,0,0), seq(0,0,0),
+             col="blue", type="p", pch=16)
+legend("topleft", inset=.05,      # location and inset
+       bty="n", cex=.5,              # suppress legend box, shrink text 50%
+       title="Feature Classes",
+       c("Train A", "Train B", "Test"), fill=c("darkgreen", "red", "blue"))
+
+# Need to remove class labels and colors from train2 set before using with knn
+train2 <- train2[,1:3]
+
 knn(train2, test2, k=3, cl = Y) # perform the knn with k neighbors
 summary(knn(train2, test2, k=3, cl = Y))
 
-
+# now add more test points
+test2 <- matrix(c(0,4,4,0,1,3,0,3,-1,0,1,2,4,0,1), ncol=3, byrow=TRUE)
+knn(train2, test2, k=3, cl = Y) # perform the knn with k neighbors
+summary(knn(train2, test2, k=3, cl = Y))
