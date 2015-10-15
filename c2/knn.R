@@ -87,7 +87,7 @@ train2$classcolor[train2$Y=="Red"] <- "red"
 train2$classcolor[train2$Y=="Green"] <- "darkgreen"
 # to repeat the above approach, make a plot to look at points in the classes
 # this uses the scatterplot3d package, which leaves something to be desired
-# more infor at
+# more infor at http://www.r-bloggers.com/getting-fancy-with-3-d-scatterplots/
 s3d <- scatterplot3d(train2$X1,train2$X2,train2$X3,
               xlab = "X-axis",
               ylab = "Y-axis",
