@@ -1,8 +1,10 @@
 ###########################################################
-### ISLR -  - C2
+### ISLR - Mainly graphical analysis of College data factors - C2
 ###########################################################
 
 library(ISLR)
+library(reshape2)
+
 
 
 # read in college data set.
@@ -123,5 +125,24 @@ ggplot(collegeDF) +
 
 # can't get this to work to calculate subset means
 # ddply(collegeDF, "S.F.Ratio", summarise, rating.mean=mean(rating))
+
+### Following is for building out a college factor correlation heatmap
+colcors <- cor(collegeDF[,c(2:18)])
+colcors <- melt(data = colcors, varnames = c("x", "y"), value.name = "Correlations")
+#now order the result for plotting
+colcorsOrdered <- colcors[order(colcors$Correlations), ]
+
+#now plot as a heat map
+require(scales)
+ggplot(colcorsOrdered) +
+    aes(x=x, y=y) +
+    geom_tile(aes(fill=Correlations)) +
+    scale_fill_gradient2(low=muted("red"), mid="white", high="steelblue",
+                         guide=guide_colorbar(ticks = FALSE, barheight = 12),
+                         limits=c(-1,1)) +
+    theme_minimal() +
+    labs(x=NULL, y=NULL) +
+    ggtitle("Correlation Heat Map of University Factors")
+# end of correlation heatmap
 
 # end of listing
